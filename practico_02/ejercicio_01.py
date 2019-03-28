@@ -13,5 +13,6 @@ class Rectangulo:
     
 R1 = Rectangulo(20,30)
 
-
+ 
+    
 assert(R1.area()) == 600
