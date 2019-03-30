@@ -46,7 +46,8 @@ class Persona:
 
 p1 = Persona("Tomas",22,"hombre",70,1.70)
 print("Mayor de edad?",p1.es_mayor_edad())
-
+ 
+    
 assert(p1.es_mayor_edad()) == True
 
 
