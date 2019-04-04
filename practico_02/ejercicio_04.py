@@ -8,8 +8,8 @@
 # - avance(): indica que porcentaje de la carrera tiene aprobada.
 # - edad_ingreso(): indica que edad tenia al ingresar a la carrera (basándose en el año actual).
 from practico_02.ejercicio_03 import Persona
-"""
 from datetime import datetime
+"""
 from random import randint
 
 
