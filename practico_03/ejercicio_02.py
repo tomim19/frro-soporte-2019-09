@@ -2,12 +2,21 @@
 # y devuelva los datos ingresados el id del nuevo registro.
 
 import datetime
+import sqlite3
+from Ejercicio1 import reset_tabla
 
-from practico_03.ejercicio_01 import reset_tabla
 
+conn = sqlite3.connect('Tabla_Ej1.db')
+c = conn.cursor()
 
-def agregar_persona(nombre, nacimiento, dni, altura):
-    return 0
+def agregar_persona (nombre, nacimiento, dni, altura):
+    iSQL='''INSERT INTO Persona (Nombre, FechaNacimiento, DNI, Altura)
+    VALUES (?, ?, ?, ?)'''
+    tdatos= (nombre, nacimiento, dni, altura)
+    c.execute(iSQL, tdatos)
+    conn.commit()
+    id = c.lastrowid
+    return id
 
 
 @reset_tabla
@@ -16,6 +25,7 @@ def pruebas():
     id_marcela = agregar_persona('marcela gonzalez', datetime.datetime(1980, 1, 25), 12164492, 195)
     assert id_juan > 0
     assert id_marcela > id_juan
+
 
 if __name__ == '__main__':
     pruebas()
