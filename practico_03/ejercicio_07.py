@@ -8,13 +8,40 @@
 # - False en caso de no cumplir con alguna validacion.
 
 import datetime
+import sqlite3
 
-from practico_03.ejercicio_02 import agregar_persona
-from practico_03.ejercicio_06 import reset_tabla
+from Ejercicio2 import agregar_persona
+from Ejercicio6 import reset_tabla
 
+conn = sqlite3.connect('Tabla_Ej1.db')
+c = conn.cursor()
 
 def agregar_peso(id_persona, fecha, peso):
-    pass
+    sSQL='''SELECT * from Persona where IdPersona=?'''
+    ttdatos= (id_persona,)
+    c.execute(sSQL, ttdatos)
+    x = c.fetchone()
+    if x is None:
+        return False
+    else:
+        ssSQL='''SELECT * from PersonaPeso where Fecha>? '''
+        tttdatos= (fecha,)
+        c.execute(ssSQL, tttdatos)
+        z = c.fetchone()
+        if z is None:
+            iSQL='''INSERT INTO PersonaPeso(IdPersona, Fecha, Peso) 
+            VALUES(?,?,?)'''
+            tdatos= (id_persona, fecha, peso,)
+            c.execute(iSQL, tdatos)
+            conn.commit()
+            id = c.lastrowid
+            return id
+        else:
+            return False
+
+
+
+
 
 
 @reset_tabla
