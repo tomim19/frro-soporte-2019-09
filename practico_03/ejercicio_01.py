@@ -13,7 +13,7 @@ import sqlite3
 conn = sqlite3.connect('Tabla_Ej1.db')
 c = conn.cursor()
 def crear_tabla():
-    c.execute('''CREATE TABLE Persona(IdPersona INTEGER PRIMARY KEY AUTOINCREMENT, Nombre TEXT, FechaNacimiento TEXT,DNI INTEGER, Altura INTEGER) ''')
+    c.execute('''CREATE TABLE IF NOT EXISTS Persona(IdPersona INTEGER PRIMARY KEY AUTOINCREMENT, Nombre TEXT, FechaNacimiento DATE,DNI INTEGER, Altura INTEGER) ''')
 
 
 def borrar_tabla():
