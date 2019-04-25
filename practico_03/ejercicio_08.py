@@ -15,21 +15,35 @@
 # - False en caso de no cumplir con alguna validacion.
 
 import datetime
+import sqlite3
+from Ejercicio2 import agregar_persona
+from Ejercicio6 import reset_tabla
+from Ejercicio7 import agregar_peso
 
-from practico_03.ejercicio_02 import agregar_persona
-from practico_03.ejercicio_06 import reset_tabla
-from practico_03.ejercicio_07 import agregar_peso
-
+conn = sqlite3.connect('Tabla_Ej1.db')
+c = conn.cursor()
 
 def listar_pesos(id_persona):
-    return []
+    sSQL='''SELECT * FROM Persona WHERE IdPersona=?'''
+    tdatos= (id_persona,)
+    c.execute(sSQL, tdatos)
+    x= c.fetchone()
+    if x is None:
+        return False
+    else:
+        ssSQL='''SELECT Fecha, Peso FROM PersonaPeso WHERE IdPersona=?'''
+        ttdatos= (id_persona,)
+        c.execute(ssSQL, ttdatos)
+        lista=c.fetchall()
+        return lista
+
 
 
 @reset_tabla
 def pruebas():
     id_juan = agregar_persona('juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)
-    agregar_peso(id_juan, datetime.datetime(2018, 5, 1), 80)
-    agregar_peso(id_juan, datetime.datetime(2018, 6, 1), 85)
+    agregar_peso(id_juan, datetime.date(2018, 5, 1), 80)
+    agregar_peso(id_juan, datetime.date(2018, 6, 1), 85)
     pesos_juan = listar_pesos(id_juan)
     pesos_esperados = [
         ('2018-05-01', 80),
