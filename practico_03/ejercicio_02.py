@@ -3,7 +3,7 @@
 
 import datetime
 import sqlite3
-from Ejercicio1 import reset_tabla
+from practico_03.ejercicio_01 import reset_tabla
 
 
 conn = sqlite3.connect('Tabla_Ej1.db')
