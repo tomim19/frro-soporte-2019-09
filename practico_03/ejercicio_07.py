@@ -10,8 +10,8 @@
 import datetime
 import sqlite3
 
-from Ejercicio2 import agregar_persona
-from Ejercicio6 import reset_tabla
+from practico_03.ejercicio_02 import agregar_persona
+from practico_03.ejercicio_06 import reset_tabla
 
 conn = sqlite3.connect('Tabla_Ej1.db')
 c = conn.cursor()
