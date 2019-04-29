@@ -5,7 +5,7 @@
 
 # Implementar la funcion borrar_tabla, que borra la tabla creada anteriormente.
 
-from Ejercicio1 import borrar_tabla, crear_tabla
+from practico_03.ejercicio_01 import borrar_tabla, crear_tabla
 import sqlite3
 
 conn = sqlite3.connect('Tabla_Ej1.db')
