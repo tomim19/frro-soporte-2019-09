@@ -24,7 +24,6 @@ class Persona(Base):
 
 engine = create_engine( 'sqlite:///sqlalchemy_ejemplo0.db',echo=True)
 Base.metadata.bind = engine
-
 DBSession = sessionmaker()
 DBSession.bind = engine
 session = DBSession()
