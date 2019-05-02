@@ -22,7 +22,7 @@ class Persona(Base):
     DNI = Column(Integer)
     Altura = Column(Integer)
 
-engine = create_engine( 'sqlite:///sqlalchemy_ejemplo0.db',echo=True)
+engine = create_engine( 'sqlite:///sqlalchemy_ejemplo0.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker()
