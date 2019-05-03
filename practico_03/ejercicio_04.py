@@ -3,28 +3,31 @@
 # Si no encuentra ningun registro, devuelve False.
 
 import datetime
-import sqlite3
-from practico_03.ejercicio_01 import reset_tabla
-from practico_03.ejercicio_02 import agregar_persona
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from ejercicio_01 import Base, Persona, reset_tabla, borrar_Tabla
+from ejercicio_02 import agregar_persona
 
+borrar_Tabla()
+engine = create_engine( 'sqlite:///sqlalchemy_practico03A.db',echo=True)
+Session = sessionmaker(bind=engine)
+session = Session()
 
-conn = sqlite3.connect('Tabla_Ej1.db')
-c = conn.cursor()
-
-def buscar_persona(IdPersona):
-    sSQL = '''SELECT * FROM Persona WHERE IdPersona=?'''
-    c.execute(sSQL, (IdPersona,))
-    x = c.fetchone()
-    if x is None:
+def buscar_persona(id_persona):
+    usuario = session.query(Persona).filter(Persona.IdPersona==id_persona).one()
+    if usuario is None:
         return False
     else:
-        return x
-
+        resultado= [usuario.IdPersona, usuario.Nombre, usuario.FechaNacimiento, usuario.DNI, usuario.Altura]
+        print (resultado)
+        return resultado
 
 @reset_tabla
 def pruebas():
-    juan = buscar_persona(agregar_persona('juan perez', datetime.date(1988, 5, 15), 32165498, 180))
-    assert juan == (1, 'juan perez', '1988-05-15', 32165498, 180)
+
+    juan = buscar_persona(agregar_persona('juan perez', datetime.datetime(1988, 5, 15).strftime("%Y-%m-%d %H:%M:%S"), 32165498, 180))
+    print (juan)
+    assert juan == (1, 'juan perez', datetime.datetime(1988, 5, 15).strftime("%Y-%m-%d %H:%M:%S"), 32165498, 180)
     assert buscar_persona(12345) is False
 
 if __name__ == '__main__':
