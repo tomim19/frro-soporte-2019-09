@@ -4,30 +4,36 @@
 # - Peso: Int()
 
 # Implementar la funcion borrar_tabla, que borra la tabla creada anteriormente.
-import sqlite3
-from practico_03.ejercicio_01 import borrar_tabla, crear_tabla
 
+from sqlalchemy.ext.declarative import declarative_base
+from ejercicio_01 import borrar_Tabla, crear_Tabla, Persona
+from sqlalchemy import Column, Integer, String, ForeignKey,Float
+from sqlalchemy import create_engine
 
-conn = sqlite3.connect('Tabla_Ej1.db')
-c = conn.cursor()
+Base=declarative_base()
 
-def crear_tabla_peso():
-    c.execute(
-        '''CREATE TABLE IF NOT EXISTS PersonaPeso(IdPersona INTEGER, Fecha DATE, Peso INTEGER, FOREIGN KEY ("IdPersona") REFERENCES "Persona"("IdPersona")) ''')
+class Peso(Base):
+        __tablename__ = 'PersonaPeso'
+        IdPeso = Column(Integer, primary_key=True, autoincrement=True)
+        IdPersona = Column(Integer, ForeignKey(Persona.IdPersona))
+        Fecha = Column(String)
+        Peso = Column(Float)
 
+def crear_Tabla_Peso():
+        Peso.__table__.create()
 
+def borrar_Tabla_Peso():
+        Peso.__table__.drop()
 
-def borrar_tabla_peso():
-    c.execute('''DROP TABLE PersonaPeso''')
+engine=create_engine( 'sqlite:///sqlalchemy_practico03A.db',echo=True)
+Base.metadata.bind = engine
 
-
-
-# no modificar
+ # no modificar
 def reset_tabla(func):
-    def func_wrapper():
-        crear_tabla()
-        crear_tabla_peso()
-        func()
-        borrar_tabla_peso()
-        borrar_tabla()
-    return func_wrapper
+        def func_wrapper():
+                crear_Tabla()
+                crear_Tabla_Peso()
+                func()
+                borrar_Tabla_Peso()
+                borrar_Tabla()
+        return func_wrapper

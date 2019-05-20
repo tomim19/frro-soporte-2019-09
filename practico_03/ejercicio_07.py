@@ -7,41 +7,42 @@
 # - ID del peso registrado.
 # - False en caso de no cumplir con alguna validacion.
 
+
 import datetime
-import sqlite3
 
-from practico_03.ejercicio_02 import agregar_persona
-from practico_03.ejercicio_06 import reset_tabla
+from ejercicio_02 import agregar_persona
+from ejercicio_06 import reset_tabla, Peso
+from ejercicio_04 import buscar_persona
+from sqlalchemy.orm import sessionmaker
+from ejercicio_01 import engine
 
-conn = sqlite3.connect('Tabla_Ej1.db')
-c = conn.cursor()
 
-def agregar_peso(id_persona, fecha, peso):
-    sSQL='''SELECT * from Persona where IdPersona=?'''
-    ttdatos= (id_persona,)
-    c.execute(sSQL, ttdatos)
-    x = c.fetchone()
-    if x is None:
+Session = sessionmaker(bind=engine)
+session = Session()
+
+def buscar_peso(id_persona,fecha):
+    bandera = session.query(Peso).filter(Peso.IdPersona==id_persona, Peso.Fecha > fecha).first()
+    if (bandera is None):
         return False
     else:
-        ssSQL='''SELECT * from PersonaPeso where Fecha>? '''
-        tttdatos= (fecha,)
-        c.execute(ssSQL, tttdatos)
-        z = c.fetchone()
-        if z is None:
-            iSQL='''INSERT INTO PersonaPeso(IdPersona, Fecha, Peso) 
-            VALUES(?,?,?)'''
-            tdatos= (id_persona, fecha, peso,)
-            c.execute(iSQL, tdatos)
-            conn.commit()
-            id = c.lastrowid
-            return id
-        else:
+        return True
+
+def agregar_peso(id_persona, fecha, peso):
+    bandera = buscar_persona(id_persona)
+    if bandera is False:
+        return False
+    else:
+        Pes = buscar_peso(id_persona,fecha)
+        if Pes is True:
             return False
-
-
-
-
+        else:
+            Pe = Peso()
+            Pe.IdPersona=id_persona
+            Pe.Fecha=fecha
+            Pe.Peso=peso
+            session.add(Pe)
+            session.commit()
+            return Pe.IdPersona
 
 
 @reset_tabla
@@ -52,6 +53,8 @@ def pruebas():
     assert agregar_peso(200, datetime.datetime(1988, 5, 15), 80) == False
     # registro previo al 2018-05-26
     assert agregar_peso(id_juan, datetime.datetime(2018, 5, 16), 80) == False
+    assert agregar_peso(id_juan, datetime.datetime(2018, 5, 30), 85)
 
 if __name__ == '__main__':
     pruebas()
+session.close()

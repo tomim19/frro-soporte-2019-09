@@ -2,36 +2,32 @@
 # Devuelve un booleano en base a si encontro el registro y lo actualizo o no.
 
 import datetime
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import update
+from ejercicio_01 import Base, Persona, reset_tabla, engine
+from ejercicio_02 import agregar_persona
+from ejercicio_04 import buscar_persona
 
-from practico_03.ejercicio_01 import reset_tabla
-from practico_03.ejercicio_02 import agregar_persona
-from practico_03.ejercicio_04 import buscar_persona
-
-
-conn = sqlite3.connect('Tabla_Ej1.db')
-c = conn.cursor()
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def actualizar_persona(Id_Persona, Nombre2, FechaNacimiento2, DNI2, Altura2):
-    c.execute(
-        "UPDATE Persona SET  Nombre = ?, FechaNacimiento=?, DNI=?, Altura=? WHERE IdPersona = ?",
-        (Nombre2, FechaNacimiento2, DNI2, Altura2, Id_Persona))
-    conn.commit()
-    cSQL = '''SELECT * FROM Persona WHERE IdPersona=?'''
-    c.execute(cSQL, (Id_Persona,))
-    aux = c.fetchone()
-    if aux is None:
+    bandera = buscar_persona(Id_Persona)
+    if bandera is False:
         return False
     else:
-        return aux
-
+        actualizar = update(Persona).where(Persona.IdPersona == Id_Persona).values(Nombre=Nombre2,FechaNacimiento=FechaNacimiento2,DNI=DNI2,Altura=Altura2)
+        session.execute(actualizar)
+        session.commit()
 
 @reset_tabla
 def pruebas():
-    id_juan = agregar_persona('juan perez', datetime.date(1988, 5, 15), 32165498, 180)
-    actualizar_persona(id_juan, 'juan carlos perez', datetime.date(1988, 4, 16), 32165497, 181)
-    assert buscar_persona(id_juan) == (1, 'juan carlos perez', '1988-04-16', 32165497, 181)
-    assert actualizar_persona(123, 'nadie', datetime.date(1988, 4, 16), 12312312, 181) is False
+    id_juan = agregar_persona('juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)
+    actualizar_persona(id_juan, 'juan carlos perez', datetime.datetime(1988, 4, 16), 32165497, 181)
+    assert buscar_persona(id_juan) == (1, 'juan carlos perez', datetime.datetime(1988, 4, 16).strftime("%Y-%m-%d %H:%M:%S"), 32165497, 181)
+    assert actualizar_persona(123, 'nadie', datetime.datetime(1988, 4, 16), 12312312, 181) is False
 
 if __name__ == '__main__':
     pruebas()
+session.close()

@@ -13,46 +13,43 @@
 #       ('2018-05-01', 82),
 #   ]
 # - False en caso de no cumplir con alguna validacion.
-
 import datetime
-import sqlite3
-from practico_03.ejercicio_02 import agregar_persona
-from practico_03.ejercicio_06 import reset_tabla
-from practico_03.ejercicio_07 import agregar_peso
 
-conn = sqlite3.connect('Tabla_Ej1.db')
-c = conn.cursor()
+from ejercicio_02 import agregar_persona
+from ejercicio_06 import reset_tabla, Peso
+from ejercicio_07 import agregar_peso
+from sqlalchemy.orm import sessionmaker
+from ejercicio_01 import engine
+from ejercicio_04 import buscar_persona
+
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def listar_pesos(id_persona):
-    sSQL='''SELECT * FROM Persona WHERE IdPersona=?'''
-    tdatos= (id_persona,)
-    c.execute(sSQL, tdatos)
-    x= c.fetchone()
-    if x is None:
-        return False
+    bandera = buscar_persona(id_persona)
+    if bandera is False:
+        return  False
     else:
-        ssSQL='''SELECT Fecha, Peso FROM PersonaPeso WHERE IdPersona=?'''
-        ttdatos= (id_persona,)
-        c.execute(ssSQL, ttdatos)
-        lista=c.fetchall()
-        return lista
-
+        pes = session.query(Peso).filter(Peso.IdPersona==id_persona).all()
+        pesoLista = []
+        for p in pes:
+            per = (p.Fecha, int(p.Peso))
+            pesoLista.append(per)
+        return pesoLista
 
 
 @reset_tabla
+
 def pruebas():
     id_juan = agregar_persona('juan perez', datetime.datetime(1988, 5, 15), 32165498, 180)
-    agregar_peso(id_juan, datetime.date(2018, 5, 1), 80)
-    agregar_peso(id_juan, datetime.date(2018, 6, 1), 85)
+    agregar_peso(id_juan, datetime.datetime(2018, 5, 1).strftime("%Y-%m-%d %S:%M:%S"), 80)
+    agregar_peso(id_juan, datetime.datetime(2018, 6, 1).strftime("%Y-%m-%d %H:%M:%S"), 85)
     pesos_juan = listar_pesos(id_juan)
-    pesos_esperados = [
-        ('2018-05-01', 80),
-        ('2018-06-01', 85),
-    ]
+    pesos_esperados = [('2018-05-01 00:00:00', 80), ('2018-06-01 00:00:00', 85)]
     assert pesos_juan == pesos_esperados
-    # id incorrecto
+     #id incorrecto
     assert listar_pesos(200) == False
-
 
 if __name__ == '__main__':
     pruebas()
+session.close()

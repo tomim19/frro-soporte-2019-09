@@ -3,12 +3,11 @@
 import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from ejercicio_01 import Base, Persona, reset_tabla
+from ejercicio_01 import Base, Persona, reset_tabla, engine 
 
-engine = create_engine( 'sqlite:///sqlalchemy_practico03A.db',echo=True)
 Session = sessionmaker(bind=engine)
-
 session = Session()
+
 def agregar_persona(nombre, nacimiento, dni, altura):    
     persona = Persona()
     persona.Nombre = nombre

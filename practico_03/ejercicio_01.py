@@ -10,31 +10,28 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, Integer, String
+
 
 
 Base = declarative_base() 
 class Persona(Base):
     __tablename__ = "Persona" 
-    IdPersona = Column(Integer, primary_key=True, autoincrement=True) #--- indispensable
+    IdPersona = Column(Integer, primary_key=True, autoincrement=True)
     Nombre = Column(String)
-    FechaNacimiento = Column(DateTime)
+    FechaNacimiento = Column(String)
     DNI = Column(Integer)
     Altura = Column(Integer)
 
 engine = create_engine( 'sqlite:///sqlalchemy_practico03A.db',echo=True)
-Session = sessionmaker(bind=engine)
-Session.configure(bind=engine)
-session = Session()
-
+Base.metadata.bind = engine
 
 
 def crear_Tabla():
-    Base.metadata.create_all(bind=engine)
+    Persona.__table__.create()
 
 def borrar_Tabla():
-    Base.metadata.drop_all(bind=engine)
+    Persona.__table__.drop()
 
 def reset_tabla(func):
     def func_wrapper():
@@ -42,4 +39,3 @@ def reset_tabla(func):
         func()
         borrar_Tabla()
     return func_wrapper
-session.close()

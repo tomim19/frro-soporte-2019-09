@@ -5,10 +5,10 @@
 import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from ejercicio_01 import Base, Persona, reset_tabla
+from ejercicio_01 import Base, Persona, reset_tabla, engine
 from ejercicio_02 import agregar_persona
 
-engine = create_engine( 'sqlite:///sqlalchemy_practico03A.db',echo=True)
+
 Session = sessionmaker(bind=engine)
 session = Session()
 
