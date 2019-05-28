@@ -142,19 +142,8 @@ class Aplicacion():
     # mismo lugar.
     
     def aceptar(self):
-        if self.clave.get() == 'tkinter':
-            print("Acceso permitido")
             print("Operando1:   ", self.ctext1.get())
             print("Operando2:", self.ctext2.get())
-        else:
-            print("Acceso denegado")
-            
-            # Se inicializa la variable 'self.clave' para
-            # que el widget 'self.ctext2' quede limpio.
-            # Por último, se vuelve a asignar el foco
-            # a este widget para poder escribir una nueva
-            # contraseña.
-            
             self.operando1.set("")
             self.operando2.set("")
             self.ctext2.focus_set()
@@ -173,7 +162,7 @@ class Aplicacion():
 
 def main():
     mi_app = Aplicacion()
-    return 0
+    return mi_app
 
 if __name__ == '__main__':
     main()
