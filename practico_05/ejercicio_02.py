@@ -3,7 +3,7 @@
 
 from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
-from practico_05.ejercicio_01 import Base, Socio
+from ejercicio_01 import Base, Socio
 
 
 
@@ -15,6 +15,7 @@ class DatosSocio(object):
         db_session = sessionmaker()
         db_session.bind = engine
         self.session = db_session()
+        # Socio.__table__.create()
 
     def buscar(self, id_socio):
         """

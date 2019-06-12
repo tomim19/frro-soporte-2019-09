@@ -5,7 +5,7 @@
 # - apellido: string (longitud 250)
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String 
 Base = declarative_base()
 
 
@@ -15,4 +15,5 @@ class Socio(Base):
     dni = Column(Integer, unique=True)
     nombre = Column(String(250))
     apellido = Column(String(250))
+
 
