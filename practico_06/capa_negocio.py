@@ -1,7 +1,10 @@
 # Implementar los metodos de la capa de negocio de socios.
+# import sys
 
-from practico_05.ejercicio_01 import Socio
-from practico_05.ejercicio_02 import DatosSocio
+# sys.path.append("C:\SOPORTEV\GIT\practico_05")
+# print (sys.path)
+from ejercicio_01 import Socio
+from ejercicio_02 import DatosSocio
 
 
 class DniRepetido(Exception):
