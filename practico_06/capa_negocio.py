@@ -1,8 +1,8 @@
 # Implementar los metodos de la capa de negocio de socios.
-# import sys
+import sys
 
-# sys.path.append("C:\SOPORTEV\GIT\practico_05")
-# print (sys.path)
+sys.path.append("C:\SOPORTEV\GIT\practico_05")
+
 from ejercicio_01 import Socio
 from ejercicio_02 import DatosSocio
 
@@ -140,4 +140,6 @@ class NegocioSocio(object):
             return True
         else:
             raise MaximoAlcanzado("Maximo de socios alcanzado")
+    
+
             
