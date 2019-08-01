@@ -47,7 +47,7 @@ class NegocioSocio(object):
        
         
 
-    def todos(self):
+    def todoss(self):
         """
         Devuelve listado de todos los socios.
         :rtype: list
@@ -68,15 +68,22 @@ class NegocioSocio(object):
             self.regla_1(socio)
             self.regla_2(socio)
             self.regla_3()
+            alta = self.datos.alta(socio)
+            self.datos.cerrar()
+            print(alta)
+            if alta == None:
+                return False
+            else:
+                return True
         except DniRepetido:
+            print("a")
             return False
         except LongitudInvalida:
+            print("b")
             return False
         except MaximoAlcanzado:
+            print("c")
             return False
-        else:
-            self.datos.alta(socio)
-            return True
 
     def baja(self, id_socio):
         """
@@ -84,7 +91,10 @@ class NegocioSocio(object):
         Devuelve True si el borrado fue exitoso.
         :rtype: bool
         """
-        return self.datos.baja(id_socio)
+
+        bandera = self.datos.baja(id_socio)
+        return bandera
+
 
 
     def modificacion(self, socio):
@@ -100,9 +110,14 @@ class NegocioSocio(object):
             self.regla_2(socio)
         except LongitudInvalida:
             return False
-        else:
-            self.datos.modificacion(socio)
-            return True
+        finally:
+            mod = self.datos.modificacion(socio)
+            self.datos.cerrar()
+            if mod == None:
+                return False
+            else:
+                return True
+
 
     def regla_1(self, socio):
         """
@@ -111,7 +126,9 @@ class NegocioSocio(object):
         :raise: DniRepetido
         :return: bool
         """
-        if self.datos.buscar_dni(socio.dni) == None:
+        busq = self.datos.buscar_dni(socio.dni)
+        print(busq)
+        if busq == False:
             return True
         else:
             raise DniRepetido("Dni repetido")
@@ -124,7 +141,7 @@ class NegocioSocio(object):
         :raise: LongitudInvalida
         :return: bool
         """
-        if len(socio.nombre)>self.MIN_CARACTERES and len(socio.nombre)<self.MAX_CARACTERES and len(socio.apellido)>self.MIN_CARACTERES and len(socio.apellido)<self.MAX_CARACTERES:
+        if (len(socio.nombre)>=self.MIN_CARACTERES) and (len(socio.nombre)<=self.MAX_CARACTERES) and (len(socio.apellido)>=self.MIN_CARACTERES) and (len(socio.apellido)<=self.MAX_CARACTERES):
             return True
         else:
             raise LongitudInvalida("Longitud invalida")
@@ -136,10 +153,12 @@ class NegocioSocio(object):
         :raise: MaximoAlcanzado
         :return: bool
         """
-        if len(self.datos.todos)<self.MAX_SOCIOS:
-            return True
-        else:
+        if len(self.datos.todos())==self.MAX_SOCIOS:
             raise MaximoAlcanzado("Maximo de socios alcanzado")
-    
+        else:   
+            return True
 
-            
+    def cerrar(self):
+        self.datos.cerrar()    
+
+       
