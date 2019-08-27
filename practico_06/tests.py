@@ -1,11 +1,11 @@
 # Implementar los casos de prueba descriptos.
 
 import unittest
-# import sys
+import sys
 
-# sys.path.append("C:\SOPORTEV\GIT\practico_05")
-# print (sys.path)
+sys.path.append("C:\SOPORTEV\GIT\practico_05")
 from ejercicio_01 import Socio
+from ejercicio_02 import DatosSocio
 from capa_negocio import NegocioSocio, LongitudInvalida, DniRepetido, MaximoAlcanzado
 
 
@@ -18,6 +18,7 @@ class TestsNegocio(unittest.TestCase):
     def tearDown(self):
         super(TestsNegocio, self).tearDown()
         self.ns.datos.borrar_todos()
+
 
     def test_alta(self):
         # pre-condiciones: no hay socios registrados
@@ -152,4 +153,8 @@ class TestsNegocio(unittest.TestCase):
         self.assertEqual(socio_mod.apellido, 'Suarez')
         self.assertEqual(socio_mod.dni, 13264587)
 
-
+if __name__ == '__main__':
+    ts = TestsNegocio()
+    ts.setUp()
+    ts.test_alta()
+    ts.tearDown()
